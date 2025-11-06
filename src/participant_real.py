@@ -26,7 +26,7 @@ class Participant:
         #mowing_frequencies = ['once_a_day', 'once_every_two_days', 'once_per_week', 'once_every_two_weeks','once_per_month', 'once_every_six_months', 'once_a_year', 'never']
 
         #new_frequence_dict
-        self.motivations = {a:m for (a,m) in action_list.zip(motivations)}
+        self.motivations = motivation_dict
 
         self.measures = measures
     

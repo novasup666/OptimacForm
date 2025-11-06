@@ -1,1 +1,4 @@
 action_name,target_proportion,current_proportion,min_card
+weekly,0.333333,0.3333333333333333,10
+monthly,0.333333,0.3333333333333333,10
+notatall,0.333333,0.3333333333333333,10

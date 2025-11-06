@@ -1,4 +1,4 @@
-from Optimac import allocate_action_to_participant
+from Optimac import allocate_action_to_participant,update_action_proportions
 import pandas as pan
 import portalocker
 from participant_real import Participant
@@ -33,14 +33,14 @@ def add_participant(motivations):
             allocated_action = allocated_actions[-1]
             allocationDF.loc[n] = allocated_action
 
-            update_action_proportions(n,list_actions,allocated_action[1])
+            #update_action_proportions(n,list_actions,allocated_action[1])
 
             for i in range(len(actionstatsDF)):
-                action = actionstatsDF.iloc[i]
-                action["current"] = list_actions[action["name"]]["current"]
+                print(list_actions[ actionstatsDF.loc[i,"action_name"]]["current"])
+                actionstatsDF.loc[i,"current_proportion"] = list_actions[ actionstatsDF.loc[i,"action_name"]]["current"]
 
             actionstatsDF.to_csv(action_stats_file_name,index=False)
-            allocationDF.to_csv(allocationDF, index= False)
+            allocationDF.to_csv(allocated_actions_file_name, index= False)
 
             return allocated_action[1]
             portalocker.unlock(g)  # Lock to protect data.csv and ensure the right order of the action assignment

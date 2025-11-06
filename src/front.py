@@ -31,4 +31,7 @@ for action in motivations:
     motivations[action] = motiv_map[motivation_string]
 
 if st.button("Soumettre",type="primary"):
-    add_participant(motivations)
+    res = add_participant(motivations)
+else:
+    res= None
+res
