@@ -45,7 +45,7 @@ def add_participant(motivations):
     #update_action_proportions(n,list_actions,allocated_action[1])
 
     for i in range(len(actionstatsDF)):
-        print(list_actions[ actionstatsDF.loc[i,"action_name"]]["current"])
+        #print(list_actions[ actionstatsDF.loc[i,"action_name"]]["current"])
         actionstatsDF.loc[i,"current_proportion"] = list_actions[ actionstatsDF.loc[i,"action_name"]]["current"]
 
     # actionstatsDF.to_csv(action_stats_file_name,index=False)
