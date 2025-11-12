@@ -1,6 +1,7 @@
 from Optimac import allocate_action_to_participant,update_action_proportions
 import pandas as pan
 #import portalocker
+import threading
 from participant_real import Participant
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
@@ -14,48 +15,52 @@ This is used to create forms etc
 data.csv stores the allocated actions with following columns: n, action_label, motivation (of the participant for said action)
 '''
 
+action_lock = threading.Lock()
+feedback_lock = threading.Lock()
+
 def add_participant(motivations):
 
     conn = st.connection("gsheets", type=GSheetsConnection)
 
-    # with open(allocated_actions_file_name, "r+") as f :
-    #     # portalocker.lock(f, portalocker.LOCK_EX)  # Lock to protect data.csv and ensure the right order of the action assignment
-    #     with open(action_stats_file_name,"r+") as g: 
-    #         # portalocker.lock(g, portalocker.LOCK_EX)  # Lock to protect data.csv and ensure the right order of the action assignment
-            
-            
-            #transform the csv files to compatible format for the algorithm
+    # Lock to ensure that the action assignment is made in a sequential way
+    action_lock.acquire()
 
-    #allocationDF = pan.read_csv(allocated_actions_file_name)
+    #Transform the data stored in a google sheet to data structures compatible with the OPTIMAC algorithm
     allocationDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet="allocated_actions")
+    actionstatsDF = conn.read(ttl=0,usecols=[0, 1,2,3],worksheet="actions_stats")
 
     allocated_actions  = allocationDF.values.tolist()
-
-    #actionstatsDF = pan.read_csv(action_stats_file_name)
-    actionstatsDF = conn.read(ttl=0,usecols=[0, 1,2,3],worksheet="actions_stats")
     list_actions = {line[0]:{'target':line[1], 'current':line[2],'minimum':line[3]} for line in actionstatsDF.values}
 
     n = len(allocationDF)
 
+    #Run the OPTIMAC algorithm with a new participant
     new_participant = Participant(n,motivations)
     allocate_action_to_participant(new_participant.to_dict(),n,list_actions, allocated_actions)
+    
+    #Update the dataframe
     allocated_action = allocated_actions[-1]
     allocationDF.loc[n] = allocated_action
-
-    #update_action_proportions(n,list_actions,allocated_action[1])
-
     for i in range(len(actionstatsDF)):
-        #print(list_actions[ actionstatsDF.loc[i,"action_name"]]["current"])
         actionstatsDF.loc[i,"current_proportion"] = list_actions[ actionstatsDF.loc[i,"action_name"]]["current"]
 
-    # actionstatsDF.to_csv(action_stats_file_name,index=False)
-    # allocationDF.to_csv(allocated_actions_file_name, index= False)
-
+    #Update the google sheet with new data
     actionstatsDF = conn.update(worksheet="actions_stats", data = actionstatsDF)
     allocationDF = conn.update(worksheet="allocated_actions", data = allocationDF)
     st.cache_data.clear()
-    return allocated_action[1]
-            # portalocker.unlock(g)  # Lock to protect data.csv and ensure the right order of the action assignment
 
-        # portalocker.unlock(f)  # Libère le verrou (optionnel, libéré à la fermeture)
+    #Unlock to enable other to access to the data
+    action_lock.release()  
+    
+    return allocated_action
 
+
+def add_feedback(allocated_action,feedback):
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    feedback_lock.acquire()
+
+    feedbackDF = conn.read(ttl=0,usecols=[0,1,2,3],worksheet="feedbacks")
+    allocated_action.append(int(feedback))
+    feedbackDF.loc[len(feedbackDF)] = allocated_action
+    conn.update(worksheet="feedbacks",data=feedbackDF)
+    feedback_lock.release()
