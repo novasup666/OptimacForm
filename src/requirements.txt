@@ -1,2 +1,2 @@
-st-gsheets-connections
+git+https://github.com/streamlit/gsheets-connection
 pandas
