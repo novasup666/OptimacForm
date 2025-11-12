@@ -1,6 +1,6 @@
 from Optimac import allocate_action_to_participant,update_action_proportions
 import pandas as pan
-import portalocker
+#import portalocker
 from participant_real import Participant
 
 allocated_actions_file_name = "../data/allocated_actions.csv"
@@ -14,9 +14,9 @@ data.csv stores the allocated actions with following columns: n, action_label, m
 def add_participant(motivations):
 
     with open(allocated_actions_file_name, "r+") as f :
-        portalocker.lock(f, portalocker.LOCK_EX)  # Lock to protect data.csv and ensure the right order of the action assignment
+        # portalocker.lock(f, portalocker.LOCK_EX)  # Lock to protect data.csv and ensure the right order of the action assignment
         with open(action_stats_file_name,"r+") as g: 
-            portalocker.lock(g, portalocker.LOCK_EX)  # Lock to protect data.csv and ensure the right order of the action assignment
+            # portalocker.lock(g, portalocker.LOCK_EX)  # Lock to protect data.csv and ensure the right order of the action assignment
             
             
             #transform the csv files to compatible format for the algorithm
@@ -43,7 +43,7 @@ def add_participant(motivations):
             allocationDF.to_csv(allocated_actions_file_name, index= False)
 
             return allocated_action[1]
-            portalocker.unlock(g)  # Lock to protect data.csv and ensure the right order of the action assignment
+            # portalocker.unlock(g)  # Lock to protect data.csv and ensure the right order of the action assignment
 
-        portalocker.unlock(f)  # Libère le verrou (optionnel, libéré à la fermeture)
+        # portalocker.unlock(f)  # Libère le verrou (optionnel, libéré à la fermeture)
 
