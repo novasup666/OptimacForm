@@ -80,3 +80,5 @@ Si nous vous demandions de l'appliquer dans votre quotidien, le feriez vous ?
                     st.rerun()
 if st.session_state.count ==2:
     st.markdown("Merci pour vos réponses et votre participation à cette expérience, vous pouvez fermer cet onglet.")
+
+#sdlf<sdmf
