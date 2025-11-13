@@ -1,35 +1,33 @@
 import streamlit as st
-from Optimac_API import add_participant, add_feedback
+from time import time
+import random as rd
+from config import meaningful
+#from Optimac_API import add_participant, add_feedback
 
 st.title("Campagne d'opinion: Action participative")
 
 if "count" not in st.session_state:
     st.session_state.count = 0
 
-if "constants" not in st.session_state :
-    st.session_state["constants"] = {}
-    if "scale" not in st.session_state["constants"] : 
-        st.session_state["constants"]["scale"] = [
-            "Pas du tout",
-            "Non",
-            "Plutôt non",
-            "Neutre/ne sais pas",   
-            "Plutôt oui",
-            "Oui",
-            "Tout à fait",
-        ]
 
-    if "motiv_map" not in st.session_state["constants"]:
-        scale = st.session_state["constants"]["scale"]
-        st.session_state["constants"]["motiv_map"] = {scale[i]:i-3 for i in range(len(scale))}
+if "scale" not in st.session_state : 
+    st.session_state["scale"] = [
+        "Pas du tout",
+        "Non",
+        "Plutôt non",
+        "Neutre/ne sais pas",   
+        "Plutôt oui",
+        "Oui",
+        "Tout à fait",
+    ]
 
-    if "meaningful" not in st.session_state["constants"]:
-        st.session_state["constants"]["meaningful"] =  {"weekly":"placer des graines une fois par semaine",
-                "monthly":"placer des graines une fois par mois",
-                "notatall":"ne pas placer de graines"}
+if "motiv_map" not in st.session_state:
+    scale = st.session_state["scale"]
+    st.session_state["motiv_map"] = {scale[i]:i-3 for i in range(len(scale))}
 
-if "res" not in st.session_state:
-    st.session_state["res"] = []
+
+if "seed" not in st.session_state:
+    st.session_state["seed"] = time()
 
 "Étape :", st.session_state.count+1,"/3" 
 
@@ -48,13 +46,13 @@ if st.session_state.count == 0:
     """)
 
     motivations = {"weekly":0, "monthly":0,"notatall":0} 
-    meaningful = st.session_state["constants"]["meaningful"] 
-    motiv_map = st.session_state["constants"]["motiv_map"]
+    motiv_map = st.session_state["motiv_map"]
     with st.form("action_motivations"):
         for action in motivations:
-            motivation_string = st.select_slider(
+            motivation_string = st.segmented_control(
                 f"Voudriez-vous {meaningful[action]} ?",
-                options=st.session_state["constants"]["scale"])
+                options=st.session_state["scale"], 
+                selection_mode="single")
             motivations[action] = motiv_map[motivation_string]
 
         submitted = st.form_submit_button("Soumettre") 
@@ -63,9 +61,9 @@ if st.session_state.count == 0:
                 st.session_state["res"] = add_participant(motivations)
                 st.session_state.count+=1
                 st.rerun()
+
 if st.session_state.count == 1 :
     res = st.session_state["res"]
-    meaningful = st.session_state["constants"]["meaningful"] 
     with st.form("feedback"):
         st.markdown(f"""
 Nous vous proposons d'éffectuer l'action suivante: "{meaningful[res[1]]}".\n
