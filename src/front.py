@@ -54,18 +54,21 @@ if st.session_state.count == 0:
             with st.spinner("Traitement de vos réponses en cours...", show_time=True):
                 st.session_state["res"] = add_participant(motivations)
                 st.session_state.count+=1
-
+                st.rerun()
 if st.session_state.count == 1 :
     res = st.session_state["res"]
     meaningful = st.session_state["constants"]["meaningful"] 
-    st.markdown(f"""
-Nous vous proposons d'éffectuer l'action suivante {meaningful[res[1]]}.\n
+    with st.form("feedback"):
+        st.markdown(f"""
+Nous vous proposons d'éffectuer l'action suivante: "{meaningful[res[1]]}".\n
 Si nous vous demandions de l'appliquer dans votre quotidien, le feriez vous ?
                 """)
-    with st.form("feedback"):
         selected_feedback = st.feedback("thumbs")
         if st.form_submit_button("Soumettre",type="primary",key=1):
             if selected_feedback is not None:
                 with st.spinner("Traitement de votre réponse en cours...", show_time=True):
                     add_feedback(list(res), selected_feedback)
-                st.markdown("Merci pour vos réponses et votre participation à cette expérience, vous pouvez fermer cet onglet")
+                    st.session_state.count+=1
+                    st.rerun()
+if st.session_state.count ==2:
+    st.markdown("Merci pour vos réponses et votre participation à cette expérience, vous pouvez fermer cet onglet.")
