@@ -2,7 +2,7 @@ import streamlit as st
 from time import time
 import random as rd
 from config import meaningful
-#from Optimac_API import add_participant, add_feedback
+from form_API import add_participant, add_feedback
 
 st.title("Campagne d'opinion: Action participative")
 
@@ -12,13 +12,24 @@ if "count" not in st.session_state:
 
 if "scale" not in st.session_state : 
     st.session_state["scale"] = [
-        "Pas du tout",
+        "Absolument pas",
         "Non",
         "Plutôt non",
-        "Neutre/ne sais pas",   
+        "Ne sais pas",   
         "Plutôt oui",
         "Oui",
-        "Tout à fait",
+        "Oui, absolument",
+    ]
+
+if "smaller_scale" not in st.session_state : 
+    st.session_state["scale"] = [
+        "Absolument pas",
+        "Non",
+        "Plutôt non",
+        "Ne sais pas",   
+        "Plutôt oui",
+        "Oui",
+        "Oui, absolument",
     ]
 
 if "motiv_map" not in st.session_state:
@@ -45,31 +56,39 @@ if st.session_state.count == 0:
     Ensuite vous vous verrez attribué une action et nous vous demanderons d'indiquer si vous penser que vous mettriez vraiment cette action en place ou si vous pensez que vous n'arriverez pas à vous y tenir. De la même façon, soyez le plus honnête et n'hésitez pas à prendre votre temps.
     """)
 
-    motivations = {"weekly":0, "monthly":0,"notatall":0} 
+    motivations = {} 
     motiv_map = st.session_state["motiv_map"]
     with st.form("action_motivations"):
-        for action in motivations:
+        for action in meaningful:
             motivation_string = st.segmented_control(
                 f"Voudriez-vous {meaningful[action]} ?",
                 options=st.session_state["scale"], 
                 selection_mode="single")
-            motivations[action] = motiv_map[motivation_string]
+            if motivation_string is not None:
+                motivations[action] = motiv_map[motivation_string]
 
         submitted = st.form_submit_button("Soumettre") 
-        if submitted:
+        
+        if submitted and len(motivations) == len(meaningful):
             with st.spinner("Traitement de vos réponses en cours...", show_time=True):
                 st.session_state["res"] = add_participant(motivations)
                 st.session_state.count+=1
                 st.rerun()
+        elif submitted:
+            "Completez le questionnaire svp."
+
 
 if st.session_state.count == 1 :
-    res = st.session_state["res"]
     with st.form("feedback"):
         st.markdown(f"""
-Nous vous proposons d'éffectuer l'action suivante: "{meaningful[res[1]]}".\n
-Si nous vous demandions de l'appliquer dans votre quotidien, le feriez vous ?
+blabla
                 """)
-        selected_feedback = st.feedback("thumbs")
+        selected_feedback = t.segmented_control(
+                f"Voudriez-vous {meaningful[action]} ?",
+                options=st.session_state["smaller_scale"], 
+                selection_mode="single")
+        submitted = st.form_submit_button("Soumettre") 
+
         if st.form_submit_button("Soumettre",type="primary",key=1):
             if selected_feedback is not None:
                 with st.spinner("Traitement de votre réponse en cours...", show_time=True):
