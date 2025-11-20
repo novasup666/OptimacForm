@@ -15,39 +15,61 @@ This is used to create forms etc
 data.csv stores the allocated actions with following columns: n, action_label, motivation (of the participant for said action)
 '''
 
-action_lock = threading.Lock()
+participants_lock = threading.Lock()
+motivation_lock = threading.Lock()
 feedback_lock = threading.Lock()
 
-def add_participant(campaign_id,motivations):
-
+def add_participant(age,gender, social_category,self_eval):
     conn = st.connection("gsheets", type=GSheetsConnection)
 
     # Lock to ensure that the action assignment is made in a sequential way
-    action_lock.acquire()
+    participants_lock.acquire()
 
     #Transform the data stored in a google sheet to data structures compatible with the OPTIMAC algorithm
     # allocationDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet="allocated_actions")
     # actionstatsDF = conn.read(ttl=0,usecols=[0, 1,2,3],worksheet="actions_stats")
 
-    participantsDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet=f"participants_{campaign_id}")
+    participantsDF = conn.read(ttl=0,usecols=[0, 1,2,3,4],worksheet=f"participants")
 
     # allocated_actions  = allocationDF.values.tolist()
     # list_actions = {line[0]:{'target':line[1], 'current':line[2],'minimum':line[3]} for line in actionstatsDF.values}
-    if len(participantsDF)!=0:
-        last_row = participantsDF.loc[len(participantsDF)-1]
-        n = last_row["n"]
-    else :
-        n = 0
-    i = 0
-    for action in motivations:
-        participantsDF.loc[n+i] = [n+1,action, motivations[action]]
-        i+=1
-    conn.update(worksheet=f"participants_{campaign_id}",data = participantsDF)
+
+    n = len(participantsDF)
+
+    participantsDF.loc[n] = [n+1,age,gender,social_category,self_eval]
+       
+    conn.update(worksheet=f"participants",data = participantsDF)
     st.cache_data.clear()
 
     #Unlock to enable other to access to the data
-    action_lock.release()  
+    participants_lock.release()  
     return n
+
+def add_motivations(campaign_id,n,motivations):
+
+    conn = st.connection("gsheets", type=GSheetsConnection)
+
+    # Lock to ensure that the action assignment is made in a sequential way
+    motivation_lock.acquire()
+
+    #Transform the data stored in a google sheet to data structures compatible with the OPTIMAC algorithm
+    # allocationDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet="allocated_actions")
+    # actionstatsDF = conn.read(ttl=0,usecols=[0, 1,2,3],worksheet="actions_stats")
+
+    motivationsDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet=f"motivations_{campaign_id}")
+
+    # allocated_actions  = allocationDF.values.tolist()
+    # list_actions = {line[0]:{'target':line[1], 'current':line[2],'minimum':line[3]} for line in actionstatsDF.values}
+    i = 0
+    motivationsDF_size = len(motivationsDF)
+    for action in motivations:
+        motivationsDF.loc[motivationsDF_size+i] = [n,action, motivations[action]]
+        i+=1
+    conn.update(worksheet=f"motivations_{campaign_id}",data = motivationsDF)
+    st.cache_data.clear()
+
+    #Unlock to enable other to access to the data
+    motivation_lock.release()  
     
 
 
@@ -63,3 +85,4 @@ def add_feedback(campaign_id,n,motivations,feedbacks):
         i+=1
     conn.update(worksheet=f"feedbacks_{campaign_id}",data=feedbackDF)
     feedback_lock.release()
+

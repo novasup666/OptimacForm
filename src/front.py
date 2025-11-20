@@ -1,10 +1,10 @@
 import streamlit as st
 from time import time
 import random as rd
-from config import meaningful, verbose
-from form_API import add_participant, add_feedback
+from config import meaningful_actions, verbose
+from form_API import add_participant,add_motivations, add_feedback, add_suggestion
 
-st.title("Campagne d'opinion: Action participative")
+st.title("Campagne d'opinion: action participative")
 
 if "count" not in st.session_state:
     st.session_state.count = 0
@@ -35,8 +35,9 @@ if "motiv_map" not in st.session_state:
 
 if "actions" not in st.session_state:
     rd.seed(time())
-    actions = [action for action in meaningful]
-    actions.sort(key=(lambda x: (rd.random(),x)))
+    actions = [[action for action in meaningful] for meaningful in meaningful_actions]
+    for l in actions:
+        l.sort(key=(lambda x: (rd.random(),x)))
     st.session_state["actions"] = actions
 
 if "i" not in st.session_state:
@@ -59,15 +60,17 @@ if st.session_state.count == 0:
     Le projet OPTIMAC est mené par l'équipe DRUID de l'IRISA. Son objectif est de fournir des outils pour la mise en place de campagnes d'action participatives. 
 
     Ces campagnes ont la particularité de faire participer les citoyens à la production de données scientifiques au travers de la réalisation concrète d'expériences. Par exemple: tondre son gazon à une certaine fréquence (ex 1fois/semaine) et tenir compte de l'évolution de la biodiversité dans le dit jardin.
-    Au sein du projet optimac nous essayons de modéliser le comportement de participants à de telles campagnes pour pouvoir affiner la méthode avec laquelle attribuer les expériences aux participants.
+    L'une des tâches du projet Optimac est de modéliser le comportement de participants à de telles campagnes pour pouvoir affiner la méthode avec laquelle attribuer ces expériences aux participants.
+    
     Ainsi, vous allez participer à deux campagnes fictives qui seront détaillées plus loin. 
 
-    Pas d'inquiétude ! Vous n'avez besoin que de 5 minutes pour remplir ce formulaire (Même pas besoin de jardin !).
+    Pas d'inquiétude ! Vous n'avez besoin que de 5 minutes pour remplir ce formulaire (et même pas besoin de jardin !).
 
-    Avant, tout nous avons besoin de collecter quelques informations personnelles à des fins statistiques. Nous vous informons que nous ne collectons que les données fournies en formulaire ci-dessous, 
-    que celles-ci sont hébergées par GOOGLE et donc potentiellement en dehors de l'union européenne. 
-    
-    La soumission du formulaire suivant vaut pour acceptation du stockage de ces données sur les serveurs de GOOGLE et de leurs exploitation par les membres présents et futurs de l'équipe DRUID de l'IRISA. 
+    Avant de commencer, petit point données personnelles: 
+    - Nous avons besoin de collecter quelques informations personnelles à des fins statistiques. 
+    - Nous vous informons que nous ne collectons que les données que vous fournirez dans ce formulaire.
+    - Toute réponse soumise à ce formulaire est hébergée par Google et donc potentiellement en dehors de l'Union Européenne. 
+    - La soumission du formulaire suivant vaut pour acceptation du stockage de ces données sur les serveurs de GOOGLE et de leurs exploitation pleine et entière par les membres présents et futurs de l'équipe DRUID de l'IRISA. 
 
     """)
     
@@ -100,9 +103,13 @@ if st.session_state.count == 0:
         
         submitted = st.form_submit_button("Soumettre",type="primary",key=0)
 
-        if submitted:
-            st.session_state.count +=1
-            st.rerun()
+        if submitted and [age,gender,social_category,self_eval]!=[None,None,None,None]:
+            with st.spinner("Traitement de vos réponses en cours...", show_time=True):
+                st.session_state["n"] = add_participant(age,gender,social_category,self_eval)
+                st.session_state.count +=1
+                st.rerun()
+        elif submitted:
+            "Pour continuer il est nécessaire de remplir l'intégralité des questions ci-dessus."
 
 if st.session_state.count >= 1:
     c_id = st.session_state["campaign_id"]
@@ -112,9 +119,9 @@ if st.session_state.count == 1:
     motivations = {} 
     motiv_map = st.session_state["motiv_map"]
     with st.form("action_motivations"):
-        for action in meaningful[c_id]:
+        for action in meaningful_actions[c_id]:
             motivation_string = st.segmented_control(
-                f"Voudriez-vous {meaningful[c_id][action]} ?",
+                f"Voudriez-vous {meaningful_actions[c_id][action]} ?",
                 options=st.session_state["scale"], 
                 selection_mode="single")
             if motivation_string is not None:
@@ -122,9 +129,9 @@ if st.session_state.count == 1:
 
         submitted = st.form_submit_button("Soumettre",type="primary",key=0)
         
-        if submitted and len(motivations) == len(meaningful[c_id]):
+        if submitted and len(motivations) == len(meaningful_actions[c_id]):
             with st.spinner("Traitement de vos réponses en cours...", show_time=True):
-                st.session_state["n"] = add_participant(c_id,motivations)
+                add_motivations(c_id,st.session_state["n"],motivations)
                 st.session_state["motivations"] = motivations
                 st.session_state.count+=1
                 st.rerun()
@@ -132,22 +139,22 @@ if st.session_state.count == 1:
             "Completez toutes les questions du questionnaire s'il vous plaît."
 
 
-if st.session_state.count >= 2 and st.session_state.count <2+len(st.session_state["actions"]):
+if st.session_state.count >= 2 and st.session_state.count <2+len(st.session_state["actions"][c_id]):
     if st.session_state.count == 2+st.session_state["i"]:
         with st.form("feedback"):
+            action = st.session_state["actions"][c_id][st.session_state["i"]]
             st.markdown(f"""
-blabla{st.session_state["i"]}
+Supposons, qu'après avoir consulté l'avis que vous avez exprimé sur chaque actions, les organisateurs de l'experience vous demandent d'éffectuer l'action suivante: {meaningful_actions[c_id][action]}.
                     """)
-            action = st.session_state["actions"][st.session_state["i"]]
             feedback = st.segmented_control(
-                f"Voudriez-vous {meaningful[c_id][action]} ?",
+                f"Pensez-vous que vous la réaliseriez du mieux possible ?",
                 options=st.session_state["smaller_scale"], 
                 selection_mode="single")
             if feedback is not None:
                 st.session_state["feedbacks"][action] = feedback
             submitted = st.form_submit_button("Soumettre",type="primary",key=1) 
 
-            if submitted and feedback is not None and st.session_state.count == 1+len(st.session_state["actions"]):
+            if submitted and feedback is not None and st.session_state.count == 1+len(st.session_state["actions"][c_id]):
                 with st.spinner("Traitement de votre réponse en cours...", show_time=True):
                     add_feedback(c_id,st.session_state["n"],st.session_state["motivations"], st.session_state["feedbacks"])
                     st.session_state.count+=1
@@ -155,15 +162,25 @@ blabla{st.session_state["i"]}
             elif submitted and feedback is not None:
                 st.session_state.count+=1
                 st.session_state["i"]+=1
+                st.cache_data.clear()
                 st.rerun()
             elif submitted:
                 "Completez toutes les questions du questionnaire s'il vous plaît."
 
-if st.session_state.count ==2+len(st.session_state["actions"]):
-    if st.session_state["campaign_id"]< st.session_state["nb_campaigns"]:
+if st.session_state.count ==2+len(st.session_state["actions"][st.session_state["campaign_id"]]):
+    if c_id< st.session_state["nb_campaigns"]-1:
         st.session_state["campaign_id"]+=1
         st.session_state.count = 1
+        st.session_state["i"] = 0
+        st.rerun()
     else: 
-        st.markdown("Merci pour vos réponses et votre participation à cette expérience, vous pouvez fermer cet onglet.")
+        with st.form("final_opinions"): 
+            st.markdown("Merci pour vos réponses et votre participation à cette expérience.")
+            suggestion = st.text_area("Vous pouvez fermer cet onglet ou nous donner vos suggestions ou votre avis sur cette campagne:")
+            submitted = st.form_submit_button("Soumettre")
+            if submitted:
+                add_suggestion(st.session_state["n"], suggestion)
+                st.session_state["finished"] = True
 
-#sdlf<sdmf
+if st.session_state["finished"]:
+    "Merci d'avoir partagé votre avis, vous pouvez fermer cet onglet"
