@@ -18,7 +18,7 @@ data.csv stores the allocated actions with following columns: n, action_label, m
 action_lock = threading.Lock()
 feedback_lock = threading.Lock()
 
-def add_participant(motivations):
+def add_participant(campaign_id,motivations):
 
     conn = st.connection("gsheets", type=GSheetsConnection)
 
@@ -29,7 +29,7 @@ def add_participant(motivations):
     # allocationDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet="allocated_actions")
     # actionstatsDF = conn.read(ttl=0,usecols=[0, 1,2,3],worksheet="actions_stats")
 
-    participantsDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet="participants")
+    participantsDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet=f"participants_{campaign_id}")
 
     # allocated_actions  = allocationDF.values.tolist()
     # list_actions = {line[0]:{'target':line[1], 'current':line[2],'minimum':line[3]} for line in actionstatsDF.values}
@@ -42,20 +42,24 @@ def add_participant(motivations):
     for action in motivations:
         participantsDF.loc[n+i] = [n+1,action, motivations[action]]
         i+=1
-    conn.update(worksheet="participants",data = participantsDF)
+    conn.update(worksheet=f"participants_{campaign_id}",data = participantsDF)
     st.cache_data.clear()
 
     #Unlock to enable other to access to the data
     action_lock.release()  
+    return n
     
 
 
-def add_feedback(allocated_action,feedback):
+def add_feedback(campaign_id,n,motivations,feedbacks):
     conn = st.connection("gsheets", type=GSheetsConnection)
     feedback_lock.acquire()
 
-    feedbackDF = conn.read(ttl=0,usecols=[0,1,2,3],worksheet="feedbacks")
-    allocated_action.append(int(feedback))
-    feedbackDF.loc[len(feedbackDF)] = allocated_action
-    conn.update(worksheet="feedbacks",data=feedbackDF)
+    feedbackDF = conn.read(ttl=0,usecols=[0,1,2,3],worksheet=f"feedbacks_{campaign_id}")
+    i = 0
+    feedbackDF_size = len(feedbackDF)
+    for action in motivations:
+        feedbackDF.loc[feedbackDF_size + i] = [n,action,motivations[action],feedbacks[action]]
+        i+=1
+    conn.update(worksheet=f"feedbacks_{campaign_id}",data=feedbackDF)
     feedback_lock.release()
