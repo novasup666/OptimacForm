@@ -52,6 +52,9 @@ if "campaign_id" not in st.session_state:
 if "nb_campaigns" not in st.session_state:
     st.session_state["nb_campaigns"] = len(verbose)
 
+if "finished" not in st.session_state:
+    st.session_state["finished"] = False
+
 "Étape :", st.session_state.count+1,"/3" 
 
 if st.session_state.count == 0:
