@@ -153,7 +153,7 @@ Supposons qu'après avoir consulté l'avis que vous avez exprimé sur chaque act
                 f"Pensez-vous que vous la réaliseriez du mieux possible ?",
                 options=st.session_state["smaller_scale"], 
                 selection_mode="single",
-                key = time())
+                key = st.session_state["i"]+10*st.session_state["campaign_id"])
             if feedback is not None:
                 st.session_state["feedbacks"][action] = feedback
             submitted = st.form_submit_button("Soumettre",type="primary",key=1) 
