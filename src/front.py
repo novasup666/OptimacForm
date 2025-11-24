@@ -55,7 +55,7 @@ if "nb_campaigns" not in st.session_state:
 if "finished" not in st.session_state:
     st.session_state["finished"] = False
 
-"Étape :", st.session_state.count+1,"/3" 
+"Étape :", st.session_state.count+1,"sur 6" 
 
 if st.session_state.count == 0:
     #Introduction page
@@ -147,12 +147,13 @@ if st.session_state.count >= 2 and st.session_state.count <2+len(st.session_stat
         with st.form("feedback"):
             action = st.session_state["actions"][c_id][st.session_state["i"]]
             st.markdown(f"""
-Supposons, qu'après avoir consulté l'avis que vous avez exprimé sur chaque actions, les organisateurs de l'experience vous demandent d'éffectuer l'action suivante: {meaningful_actions[c_id][action]}.
+Supposons qu'après avoir consulté l'avis que vous avez exprimé sur chaque action, les organisateurs de l'expérience vous demandent d'effectuer l'action suivante: {meaningful_actions[c_id][action]}.
                     """)
             feedback = st.segmented_control(
                 f"Pensez-vous que vous la réaliseriez du mieux possible ?",
                 options=st.session_state["smaller_scale"], 
-                selection_mode="single")
+                selection_mode="single",
+                key = st.session_state["i"])
             if feedback is not None:
                 st.session_state["feedbacks"][action] = feedback
             submitted = st.form_submit_button("Soumettre",type="primary",key=1) 
