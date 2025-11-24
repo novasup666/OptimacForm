@@ -9,22 +9,17 @@ meaningful_actions = [
 
 presentation = """
 Le projet OptimAc est mené par l'équipe DRUID de l'IRISA. Son objectif est de fournir des outils pour la mise en place de campagnes d'action participatives. 
-
 Ces campagnes ont la particularité de faire participer les citoyens à la production de données scientifiques au travers de la réalisation concrète d'expériences. Par exemple: tondre son gazon à une certaine fréquence (ex. 1 fois/semaine) et tenir compte de l'évolution de la biodiversité dans ledit jardin.
-
 L'une des tâches du projet OptimAc est de modéliser le comportement de participants à de telles campagnes pour pouvoir affiner la méthode avec laquelle attribuer ces expériences aux participants.
-
 Ainsi, vous allez participer à deux campagnes fictives qui seront détaillées plus loin. 
-
 Pas d'inquiétudes ! Vous n'avez besoin que de cinq minutes pour remplir ce formulaire (et même pas besoin de jardin !).
-
 
 Avant de commencer, petit point données personnelles: 
 - Nous avons besoin de collecter quelques informations personnelles à des fins statistiques. 
 - Nous vous informons que nous ne collectons que les données que vous fournirez dans ce formulaire.
 - Toute réponse soumise à ce formulaire est hébergée par Google et donc potentiellement en dehors de l'Union européenne. 
 - La soumission du formulaire suivant vaut pour acceptation du stockage de ces données sur les serveurs de GOOGLE et de leur exploitation pleine et entière par les membres présents et futurs de l'équipe DRUID de l'IRISA. 
-    """
+"""
 
 
 verbose = [
