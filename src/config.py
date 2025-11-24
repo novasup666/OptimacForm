@@ -15,7 +15,8 @@ Ainsi, vous allez participer à deux campagnes fictives qui seront détaillées 
 Pas d'inquiétudes ! Vous n'avez besoin que de cinq minutes pour remplir ce formulaire (et même pas besoin de jardin !).
 
 Avant de commencer, petit point données personnelles: 
-- Nous avons besoin de collecter quelques informations personnelles à des fins statistiques. 
+- Nous avons besoin de collecter quelques informations personnelles à des fins statistiques.
+- Ces données ne permettent pas de vous identifier. 
 - Nous vous informons que nous ne collectons que les données que vous fournirez dans ce formulaire.
 - Toute réponse soumise à ce formulaire est hébergée par Google et donc potentiellement en dehors de l'Union européenne. 
 - La soumission du formulaire suivant vaut pour acceptation du stockage de ces données sur les serveurs de GOOGLE et de leur exploitation pleine et entière par les membres présents et futurs de l'équipe DRUID de l'IRISA. 
