@@ -156,7 +156,7 @@ Supposons qu'après avoir consulté l'avis que vous avez exprimé sur chaque act
                 key = st.session_state["i"]+10*st.session_state["campaign_id"])
             if feedback is not None:
                 st.session_state["feedbacks"][action] = feedback
-            submitted = st.form_submit_button("Soumettre",type="primary",key=1) 
+            submitted = st.form_submit_button("Soumettre",type="primary") 
 
             if submitted and feedback is not None and st.session_state.count == 1+len(st.session_state["actions"][c_id]):
                 with st.spinner("Traitement de votre réponse en cours...", show_time=True):
