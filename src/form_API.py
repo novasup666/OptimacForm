@@ -46,7 +46,7 @@ def add_participant(age,gender, social_category,self_eval):
     participants_lock.release()  
     return n+1
 
-def add_motivations(campaign_id,n,motivations):
+def add_motivations(campaign_id,n,motivations,nb_opt= 0,optional = None):
 
     conn = st.connection("gsheets", type=GSheetsConnection)
 
@@ -57,14 +57,14 @@ def add_motivations(campaign_id,n,motivations):
     # allocationDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet="allocated_actions")
     # actionstatsDF = conn.read(ttl=0,usecols=[0, 1,2,3],worksheet="actions_stats")
 
-    motivationsDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet=f"motivations_{campaign_id}")
+    motivationsDF = conn.read(ttl=0,usecols=list(range(3+nb_opt)),worksheet=f"motivations_{campaign_id}")
 
     # allocated_actions  = allocationDF.values.tolist()
     # list_actions = {line[0]:{'target':line[1], 'current':line[2],'minimum':line[3]} for line in actionstatsDF.values}
     i = 0
     motivationsDF_size = len(motivationsDF)
     for action in motivations:
-        motivationsDF.loc[motivationsDF_size+i] = [n,action, motivations[action]]
+        motivationsDF.loc[motivationsDF_size+i] = ([n,action, motivations[action]]+optional) if optional is not None else [n,action, motivations[action]]
         i+=1
     conn.update(worksheet=f"motivations_{campaign_id}",data = motivationsDF)
     st.cache_data.clear()

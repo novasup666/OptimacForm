@@ -101,10 +101,20 @@ if st.session_state.count >= 1:
     print(st.session_state["motiv_done"])
     if not st.session_state["motiv_done"] :
         #Motivations collection
-        st.markdown(verbose[st.session_state["campaign_id"]])
+        
         motivations = {} 
         motiv_map = st.session_state["motiv_map"]
-        print("ligne 102:",c_id)
+        if c_id == 0:
+            st.markdown("""## Expérimentation fictive numéro 1 : la tonte de gazon
+
+D'abord: disons que vous ayez un jardin. """)
+            habits = st.segmented_control(f"Si vous av(i)ez un jardin quelle est/serait votre fréquence de tonte habituelle ?",
+                                        options=[
+                                            "plus de 1 fois/semaine",
+                                            "2 à 4 fois par mois",
+                                            "1 fois par mois ou moins"
+                                        ])
+        st.markdown(verbose[st.session_state["campaign_id"]])
         with st.form("action_motivations"):
             for action in meaningful_actions[c_id]:
                 motivation_string = st.segmented_control(
@@ -116,14 +126,22 @@ if st.session_state.count >= 1:
 
             submitted = st.form_submit_button("Soumettre",type="primary",key=0)
             
-            if submitted and len(motivations) == len(meaningful_actions[c_id]):
+            if submitted and len(motivations) == len(meaningful_actions[c_id])  and c_id ==0  and habits is not None:
+                with st.spinner("Traitement de vos réponses en cours...", show_time=True):
+                    add_motivations(c_id,st.session_state["n"],motivations,1,[habits])
+                    st.session_state["motivations"][c_id] = motivations
+                    st.session_state.count+=1
+                    st.session_state["campaign_id"]= (c_id + 1)%st.session_state["nb_campaigns"]
+                    st.session_state["motiv_done"] = (st.session_state["campaign_id"] == 0)
+                    st.rerun()
+            elif submitted and len(motivations) == len(meaningful_actions[c_id]):
                 with st.spinner("Traitement de vos réponses en cours...", show_time=True):
                     add_motivations(c_id,st.session_state["n"],motivations)
                     st.session_state["motivations"][c_id] = motivations
                     st.session_state.count+=1
                     st.session_state["campaign_id"]= (c_id + 1)%st.session_state["nb_campaigns"]
                     st.session_state["motiv_done"] = (st.session_state["campaign_id"] == 0)
-                    st.rerun()
+                    st.rerun()                
             elif submitted:
                 "Completez toutes les questions du questionnaire s'il vous plaît."
 

@@ -24,12 +24,7 @@ Avant de commencer, petit point données personnelles:
 
 verbose = [
     """
-## Expérimentation fictive numéro 1 : la tonte de gazon
-
-
-D'abord: disons que vous ayez un jardin. 
-
-Votre tâche serait la suivante :
+Dans le cadre de l'expérimentation, votre tâche serait la suivante :
 - Tondre votre gazon à la fréquence demandée.
 - Effectuer un inventaire des insectes sur une surface donnée une fois toutes les deux semaines.
 
