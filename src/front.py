@@ -171,7 +171,7 @@ Supposons qu'après avoir consulté l'avis que vous avez exprimé sur chaque act
             elif submitted:
                 "Completez toutes les questions du questionnaire s'il vous plaît."
 
-if st.session_state.count ==2+len(st.session_state["actions"][st.session_state["campaign_id"]]):
+if st.session_state.count ==2+len(st.session_state["actions"][st.session_state["campaign_id"]]) and not st.session_state["finished"]:
     if c_id< st.session_state["nb_campaigns"]-1:
         st.session_state["campaign_id"]+=1
         st.session_state.count = 1
@@ -180,7 +180,7 @@ if st.session_state.count ==2+len(st.session_state["actions"][st.session_state["
     else: 
         with st.form("final_opinions"): 
             st.markdown("Merci pour vos réponses et votre participation à cette expérience.")
-            suggestion = st.text_area("Vous pouvez fermer cet onglet ou nous donner vos suggestions ou votre avis sur cette campagne:")
+            suggestion = st.text_area("Vous pouvez fermer cet onglet ou nous donner vos suggestions ou votre avis sur cette campagne:",placeholder = "Écrire içi")
             submitted = st.form_submit_button("Soumettre")
             if submitted:
                 add_suggestion(st.session_state["n"], suggestion)
