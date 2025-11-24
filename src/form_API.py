@@ -44,7 +44,7 @@ def add_participant(age,gender, social_category,self_eval):
 
     #Unlock to enable other to access to the data
     participants_lock.release()  
-    return n
+    return n+1
 
 def add_motivations(campaign_id,n,motivations):
 
