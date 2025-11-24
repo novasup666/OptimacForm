@@ -30,7 +30,7 @@ def add_participant(age,gender, social_category,self_eval):
     # allocationDF = conn.read(ttl=0,usecols=[0, 1,2],worksheet="allocated_actions")
     # actionstatsDF = conn.read(ttl=0,usecols=[0, 1,2,3],worksheet="actions_stats")
 
-    participantsDF = conn.read(ttl=0,usecols=[0, 1,2,3,4],worksheet=f"participants")
+    participantsDF = conn.read(ttl=0,usecols=[0, 1,2,3,4],worksheet="participants")
 
     # allocated_actions  = allocationDF.values.tolist()
     # list_actions = {line[0]:{'target':line[1], 'current':line[2],'minimum':line[3]} for line in actionstatsDF.values}
