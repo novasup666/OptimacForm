@@ -95,4 +95,4 @@ def add_suggestion(n,suggestion):
     feedbackDF_size = len(feedbackDF)
     feedbackDF.loc[feedbackDF_size ] = [n,suggestion]
     conn.update(worksheet=f"suggestions",data=feedbackDF)
-    feedback_lock.release()
+    suggestion_lock.release()
