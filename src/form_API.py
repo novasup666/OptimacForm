@@ -18,6 +18,7 @@ data.csv stores the allocated actions with following columns: n, action_label, m
 participants_lock = threading.Lock()
 motivation_lock = threading.Lock()
 feedback_lock = threading.Lock()
+suggestion_lock = threading.Lock()
 
 def add_participant(age,gender, social_category,self_eval):
     conn = st.connection("gsheets", type=GSheetsConnection)
@@ -86,3 +87,12 @@ def add_feedback(campaign_id,n,motivations,feedbacks):
     conn.update(worksheet=f"feedbacks_{campaign_id}",data=feedbackDF)
     feedback_lock.release()
 
+def add_suggestion(n,suggestion):
+    conn = st.connection("gsheets", type=GSheetsConnection)
+    suggestion_lock.acquire()
+
+    feedbackDF = conn.read(ttl=0,usecols=[0,1],worksheet="suggestions")
+    feedbackDF_size = len(feedbackDF)
+    feedbackDF.loc[feedbackDF_size ] = [n,suggestion]
+    conn.update(worksheet=f"feedbacks_{campaign_id}",data=feedbackDF)
+    feedback_lock.release()
