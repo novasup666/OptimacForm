@@ -7,8 +7,7 @@ meaningful_actions = [
             "monthly":"placer des graines une fois par mois",
             "notatall":"ne pas placer de graines"}]
 
-presentation = """
-Le projet OptimAc est mené par l'équipe DRUID de l'IRISA. Son objectif est de fournir des outils pour la mise en place de campagnes d'action participatives. 
+presentation = """Le projet OptimAc est mené par l'équipe DRUID de l'IRISA. Son objectif est de fournir des outils pour la mise en place de campagnes d'action participatives. 
 Ces campagnes ont la particularité de faire participer les citoyens à la production de données scientifiques au travers de la réalisation concrète d'expériences. Par exemple: tondre son gazon à une certaine fréquence (ex. 1 fois/semaine) et tenir compte de l'évolution de la biodiversité dans ledit jardin.
 L'une des tâches du projet OptimAc est de modéliser le comportement de participants à de telles campagnes pour pouvoir affiner la méthode avec laquelle attribuer ces expériences aux participants.
 Ainsi, vous allez participer à deux campagnes fictives qui seront détaillées plus loin. 
