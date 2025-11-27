@@ -105,20 +105,23 @@ if st.session_state.count >= 1:
         motivations = {} 
         motiv_map = st.session_state["motiv_map"]
         
-    
+        col1,col2 = st.columns()
+        with col1:
         #Hard-coded supplementary information collection
-        if c_id == 0:
+            if c_id == 0:
+                
+                st.markdown("""## Expérimentation fictive numéro 1 : la tonte de gazon
 
-            st.markdown("""## Expérimentation fictive numéro 1 : la tonte de gazon
-
-D'abord: disons que vous ayez un jardin. """)
-            habits = st.segmented_control(f"Si vous av(i)ez un jardin quelle est/serait votre fréquence de tonte habituelle ?",
-                                        options=[
-                                            "1 fois/semaine ou moins",
-                                            "2 à 4 fois par mois",
-                                            "1 fois par mois ou moins"
-                                        ])
-        st.markdown(verbose[st.session_state["campaign_id"]])
+    D'abord: disons que vous ayez un jardin. """)
+                habits = st.segmented_control(f"Si vous av(i)ez un jardin quelle est/serait votre fréquence de tonte habituelle ?",
+                                            options=[
+                                                "1 fois/semaine ou moins",
+                                                "2 à 4 fois par mois",
+                                                "1 fois par mois ou moins"
+                                            ])
+            st.markdown(verbose[st.session_state["campaign_id"]])
+        with col2:
+            st.image(f"imgs/im{c_id}")
 
 
         with st.form("action_motivations"):

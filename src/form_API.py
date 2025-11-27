@@ -5,7 +5,7 @@ import threading
 from participant_real import Participant
 import streamlit as st
 from streamlit_gsheets import GSheetsConnection
-
+from datetime import datetime
 
 '''
 This is the program connecting the front code with the google sheet database
@@ -28,7 +28,7 @@ def add_participant(age,gender, social_category,self_eval):
 
     # Updating the data
     n = len(participantsDF)
-    participantsDF.loc[n] = [n+1,age,gender,social_category,self_eval]
+    participantsDF.loc[n] = [datetime.today().strftime('%d-%m-%Y %H:%M:%S'),n+1,age,gender,social_category,self_eval]
        
     # Pushing thus update
     conn.update(worksheet=f"participants",data = participantsDF)
