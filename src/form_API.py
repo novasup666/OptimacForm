@@ -24,7 +24,7 @@ def add_participant(age,gender, social_category,self_eval):
     participants_lock.acquire()
 
     # Acquiring the data
-    participantsDF = conn.read(ttl=0,usecols=[0, 1,2,3,4],worksheet="participants")
+    participantsDF = conn.read(ttl=0,usecols=[0, 1,2,3,4,5],worksheet="participants")
 
     # Updating the data
     n = len(participantsDF)
