@@ -4,8 +4,7 @@ import random as rd
 from config import meaningful_actions, verbose,presentation,verbose_feedback,campaign_names
 from form_API import add_participant,add_motivations, add_feedback, add_suggestion
 
-st.title("Campagne d'opinion sur les actions participatives")
-
+#>>> Initialisation of the constants in the session state
 def init_sess_state(key,value):
     if key not in st.session_state:
         st.session_state[key] = value
@@ -20,7 +19,6 @@ init_sess_state("scale",[
         "Oui",
         "Oui, absolument",
     ] )
-
 
 init_sess_state( "smaller_scale" , [
         "Non",
@@ -48,12 +46,15 @@ init_sess_state( "motiv_done" , False)
 init_sess_state("feedback_done",False)
 init_sess_state( "finished" , False)
 init_sess_state("motivations",[{} for _ in range(st.session_state["nb_campaigns"])])
-print(st.session_state["motiv_done"])
 
+
+#>>> Code of the page
+
+st.title("Campagne d'opinion sur les actions participatives")
 "Étape :", st.session_state.count+1,"sur 10" 
 
 if st.session_state.count == 0:
-    #Introduction page
+    #Introduction page + personnal data form
     st.markdown(presentation)
     
     with st.form("Preliminary informations"):
@@ -96,25 +97,30 @@ if st.session_state.count == 0:
             "Pour continuer il est nécessaire de remplir l'intégralité des questions ci-dessus."
 
 if st.session_state.count >= 1:
+
     c_id = st.session_state["campaign_id"]
-    print("ligne 96:",c_id)
-    print(st.session_state["motiv_done"])
+
+    #Motivations collection
     if not st.session_state["motiv_done"] :
-        #Motivations collection
-        
         motivations = {} 
         motiv_map = st.session_state["motiv_map"]
+        
+    
+        #Hard-coded supplementary information collection
         if c_id == 0:
+
             st.markdown("""## Expérimentation fictive numéro 1 : la tonte de gazon
 
 D'abord: disons que vous ayez un jardin. """)
             habits = st.segmented_control(f"Si vous av(i)ez un jardin quelle est/serait votre fréquence de tonte habituelle ?",
                                         options=[
-                                            "plus de 1 fois/semaine",
+                                            "1 fois/semaine ou moins",
                                             "2 à 4 fois par mois",
                                             "1 fois par mois ou moins"
                                         ])
         st.markdown(verbose[st.session_state["campaign_id"]])
+
+
         with st.form("action_motivations"):
             for action in meaningful_actions[c_id]:
                 motivation_string = st.segmented_control(
@@ -134,7 +140,7 @@ D'abord: disons que vous ayez un jardin. """)
                     st.session_state["campaign_id"]= (c_id + 1)%st.session_state["nb_campaigns"]
                     st.session_state["motiv_done"] = (st.session_state["campaign_id"] == 0)
                     st.rerun()
-            elif submitted and len(motivations) == len(meaningful_actions[c_id]):
+            elif submitted and len(motivations) == len(meaningful_actions[c_id]) and c_id!=0:
                 with st.spinner("Traitement de vos réponses en cours...", show_time=True):
                     add_motivations(c_id,st.session_state["n"],motivations)
                     st.session_state["motivations"][c_id] = motivations
@@ -145,16 +151,15 @@ D'abord: disons que vous ayez un jardin. """)
             elif submitted:
                 "Completez toutes les questions du questionnaire s'il vous plaît."
 
-    #if st.session_state.count >= 2 and st.session_state.count <2+len(st.session_state["actions"][c_id]):
+    #Feedback collection
     if st.session_state["motiv_done"] and not st.session_state["feedback_done"]:
-        #if st.session_state.count == 2+st.session_state["i"]:
         st.markdown(f"""## Votre avis sur :green[{campaign_names[c_id]}] """)
         st.markdown(verbose_feedback)
         with st.form("feedback"):
             print(st.session_state["i"])
             action = st.session_state["actions"][c_id][st.session_state["i"]]
             st.markdown(f"""
-Supposons qu'après avoir consulté l'avis que vous avez exprimé sur chaque action, les organisateurs de l'expérience vous demandent d'effectuer l'action suivante: :green[{meaningful_actions[c_id][action]}].
+Les organisateurs de l'expérience vous demandent d'effectuer l'action suivante: :green[{meaningful_actions[c_id][action]}].
                     """)
             feedback = st.segmented_control(
                 f"Pensez-vous que vous la réaliseriez du mieux possible ?",
@@ -181,9 +186,8 @@ Supposons qu'après avoir consulté l'avis que vous avez exprimé sur chaque act
             elif submitted:
                 "Completez toutes les questions du questionnaire s'il vous plaît."
 
-    if st.session_state["feedback_done"] and not st.session_state["finished"]:
-    #if st.session_state.count ==2+len(st.session_state["actions"][st.session_state["campaign_id"]]) and not st.session_state["finished"]:
- 
+    #Suggestion collection 
+    if st.session_state["feedback_done"] and not st.session_state["finished"]: 
         with st.form("final_opinions"): 
             st.markdown("Merci pour vos réponses et votre participation à cette expérience.")
             suggestion = st.text_area("Vous pouvez fermer cet onglet ou nous donner vos suggestions ou votre avis sur cette campagne:",placeholder = "Écrire içi")
@@ -191,6 +195,8 @@ Supposons qu'après avoir consulté l'avis que vous avez exprimé sur chaque act
             if submitted:
                 add_suggestion(st.session_state["n"], suggestion)
                 st.session_state["finished"] = True
+                rerun()
 
+    #Closing page
     if st.session_state["finished"]:
-        "Merci d'avoir partagé votre avis, vous pouvez fermer cet onglet."
+        "Merci d'avoir partagé votre avis et d'avoir participé à cette expérience ! Vous pouvez fermer cet onglet."

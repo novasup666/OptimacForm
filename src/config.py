@@ -1,8 +1,12 @@
+"""
+Config file used for our experiment.
+"""
+
 
 meaningful_actions = [
             {"weekly":"tondre votre gazon une fois par semaine",
             "monthly":"tondre votre gazon une fois par mois",
-            "as_usual":"tondre comme d'habitude"},
+            "as_usual":"tondre comme à votre habitude"},
             {"weekly":"placer des graines une fois par semaine",
             "monthly":"placer des graines une fois par mois",
             "notatall":"ne pas placer de graines"}]
@@ -16,9 +20,8 @@ Pas d'inquiétudes ! Vous n'avez besoin que de cinq minutes pour remplir ce form
 Avant de commencer, petit point données personnelles: 
 - Nous avons besoin de collecter quelques informations personnelles à des fins statistiques.
 - Ces données ne permettent pas de vous identifier. 
-- Nous vous informons que nous ne collectons que les données que vous fournirez dans ce formulaire.
-- Toute réponse soumise à ce formulaire est hébergée par Google et donc potentiellement en dehors de l'Union européenne. 
-- La soumission du formulaire suivant vaut pour acceptation du stockage de ces données sur les serveurs de GOOGLE et de leur exploitation pleine et entière par les membres présents et futurs de l'équipe DRUID de l'IRISA. 
+- Nous ne collectons que les données que vous fournirez dans ce formulaire.
+- La soumission du formulaire suivant vaut pour acceptation du stockage de ces données et de leurs utilisation à des fins scientiques. 
 """
 
 
@@ -26,7 +29,7 @@ verbose = [
     """
 Dans le cadre de l'expérimentation, votre tâche serait la suivante :
 - Tondre votre gazon à la fréquence demandée.
-- Effectuer un inventaire des insectes sur une surface donnée une fois toutes les deux semaines.
+- Compter des insectes sur une surface donnée une fois toutes les deux semaines.
 
 
 Quelle fréquence de tonte seriez-vous d'accord d'adopter le temps d'une expérience d'un mois ?
@@ -39,9 +42,9 @@ Vous allez devoir juger les différentes propositions, nous vous demandons de le
 ## Expérimentation fictive numéro 2 : le nourrissage d'oiseaux
 
 
-Votre tâche serait la suivante:
+Votre tâche serait la suivante :
 - Placer une certaine quantité de graines pour oiseaux sur un rebord de fenêtre, votre balcon ou votre terrasse, selon la fréquence demandée.
-- Effectuer un décompte du nombre d'oiseaux aperçus autour de votre logement, une fois par semaine pendant une vingtaine de minutes.
+- Compter les oiseaux aperçus autour de votre logement, une fois par semaine pendant une vingtaine de minutes.
 
 À quelle fréquence voudriez-vous placer des graines sur votre rebord de fenêtre ou balcon ?
 
