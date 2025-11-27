@@ -105,23 +105,24 @@ if st.session_state.count >= 1:
         motivations = {} 
         motiv_map = st.session_state["motiv_map"]
         
-        col1,col2 = st.columns()
-        with col1:
+        # col1,col2 = st.columns(2)
+        # with col1:
         #Hard-coded supplementary information collection
-            if c_id == 0:
-                
-                st.markdown("""## Expérimentation fictive numéro 1 : la tonte de gazon
+        st.image(f"imgs/im{c_id}.jpg")
 
-    D'abord: disons que vous ayez un jardin. """)
-                habits = st.segmented_control(f"Si vous av(i)ez un jardin quelle est/serait votre fréquence de tonte habituelle ?",
-                                            options=[
-                                                "1 fois/semaine ou moins",
-                                                "2 à 4 fois par mois",
-                                                "1 fois par mois ou moins"
-                                            ])
-            st.markdown(verbose[st.session_state["campaign_id"]])
-        with col2:
-            st.image(f"imgs/im{c_id}")
+        if c_id == 0:
+            
+            st.markdown("""## Expérimentation fictive numéro 1 : la tonte de gazon
+
+D'abord: disons que vous ayez un jardin. """)
+            habits = st.segmented_control(f"Si vous av(i)ez un jardin quelle est/serait votre fréquence de tonte habituelle ?",
+                                        options=[
+                                            "1 fois/semaine ou moins",
+                                            "2 à 4 fois par mois",
+                                            "1 fois par mois ou moins"
+                                        ])
+        st.markdown(verbose[st.session_state["campaign_id"]])
+    # with col2:
 
 
         with st.form("action_motivations"):
@@ -156,6 +157,8 @@ if st.session_state.count >= 1:
 
     #Feedback collection
     if st.session_state["motiv_done"] and not st.session_state["feedback_done"]:
+        st.image(f"imgs/im{c_id}.jpg")
+
         st.markdown(f"""## Votre avis sur :green[{campaign_names[c_id]}] """)
         st.markdown(verbose_feedback)
         with st.form("feedback"):
@@ -203,3 +206,20 @@ Les organisateurs de l'expérience vous demandent d'effectuer l'action suivante:
     #Closing page
     if st.session_state["finished"]:
         "Merci d'avoir partagé votre avis et d'avoir participé à cette expérience ! Vous pouvez fermer cet onglet."
+
+
+col1,col2,col3,col4,col5 = st.columns(5)
+with col1:
+    st.image("imgs/ANR_Logo.svg.png")
+
+with col2:
+    st.image("imgs/ENS_LOGOcouleur_RVB.ai")
+
+with col3:
+    st.image("imgs/logo_iris-e.jpg")
+
+with col4:
+    st.image("imgs/LogoIRISA-web.png")
+
+with col5:
+    st.image("imgs/UNIRENNES_LOGOnoir_centre_RVB.jpg")
