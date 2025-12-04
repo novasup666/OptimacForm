@@ -208,11 +208,14 @@ Les organisateurs de l'expérience vous demandent d'effectuer l'action suivante:
 
 
 
-st.html("""<footer style="background-color:#f1f1f1; padding:20px;">
-  <div style="display:flex; justify-content:center; gap:20px;">
-    <img src="imgs/ANR_Logo.svg.png" alt="Image 1" style="width:80px; height:auto;">
-    <img src="imgs/logo-irisa.png" alt="Image 2" style="width:80px; height:auto;">
-    <img src="imgs/logo_iris-e.jpg" alt="Image 3" style="width:80px; height:auto;">
-    <img src="imgs/ENS_LOGOcouleur_RVB.png" alt="Image 4" style="width:80px; height:auto;">
-  </div>
-</footer>""")
+
+"Mis en place avec le soutien de :"
+c1,c2,c3,c4 = st.columns([1,1.05,0.9,1.3])
+with c1:
+    st.image("imgs/logo-irisa.png")
+with c2:
+    st.image("imgs/ANR_Logo.svg.png")    
+with c3: 
+    st.image("imgs/logo_iris-e.jpg")
+with c4:
+    st.image("imgs/ENS_LOGOcouleur_RVB.png")
