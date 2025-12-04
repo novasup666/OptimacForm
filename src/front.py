@@ -108,7 +108,7 @@ if st.session_state.count >= 1:
         # col1,col2 = st.columns(2)
         # with col1:
         #Hard-coded supplementary information collection
-        st.image(f"imgs/im{c_id}.jpg")
+        st.image(f"src/imgs/im{c_id}.jpg")
 
         if c_id == 0:
             
@@ -156,7 +156,7 @@ D'abord: disons que vous ayez un jardin. """)
 
     #Feedback collection
     if st.session_state["motiv_done"] and not st.session_state["feedback_done"]:
-        st.image(f"imgs/im{c_id}.jpg")
+        st.image(f"src/imgs/im{c_id}.jpg")
 
         st.markdown(f"""## Votre avis sur :green[{campaign_names[c_id]}] """)
         st.markdown(verbose_feedback)
@@ -211,10 +211,10 @@ Les organisateurs de l'expérience vous demandent d'effectuer l'action suivante:
 "Expérience mise en place avec le soutien de :"
 c1,c2,c3,c4 = st.columns([1,1.05,0.9,1.3])
 with c1:
-    st.image("imgs/logo-irisa.png")
+    st.image("src/imgs/logo-irisa.png")
 with c2:
-    st.image("imgs/ANR_Logo.svg.png")    
+    st.image("src/imgs/ANR_Logo.svg.png")    
 with c3: 
-    st.image("imgs/logo_iris-e.jpg")
+    st.image("src/imgs/logo_iris-e.jpg")
 with c4:
-    st.image("imgs/ENS_LOGOcouleur_RVB.png")
+    st.image("src/imgs/ENS_LOGOcouleur_RVB.png")
