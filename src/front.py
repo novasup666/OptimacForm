@@ -161,7 +161,6 @@ D'abord: disons que vous ayez un jardin. """)
         st.markdown(f"""## Votre avis sur :green[{campaign_names[c_id]}] """)
         st.markdown(verbose_feedback)
         with st.form("feedback"):
-            print(st.session_state["i"])
             action = st.session_state["actions"][c_id][st.session_state["i"]]
             st.markdown(f"""
 Les organisateurs de l'expérience vous demandent d'effectuer l'action suivante: :green[{meaningful_actions[c_id][action]}].
@@ -200,7 +199,7 @@ Les organisateurs de l'expérience vous demandent d'effectuer l'action suivante:
             if submitted:
                 add_suggestion(st.session_state["n"], suggestion)
                 st.session_state["finished"] = True
-                rerun()
+                st.rerun()
 
     #Closing page
     if st.session_state["finished"]:
@@ -209,7 +208,7 @@ Les organisateurs de l'expérience vous demandent d'effectuer l'action suivante:
 
 
 
-"Mis en place avec le soutien de :"
+"Expérience mise en place avec le soutien de :"
 c1,c2,c3,c4 = st.columns([1,1.05,0.9,1.3])
 with c1:
     st.image("imgs/logo-irisa.png")
